@@ -2,4 +2,8 @@ BINDIR = $$PWD/bin
 LIBDIR = $$PWD/lib
 INCDIR = $$PWD/include
 
+DEPENDPATH += $$LIBDIR
+INCLUDEPATH += $$INCDIR
+LIBS += -L$$LIBDIR
+
 QMAKE_CXXFLAGS += -std=c++0x

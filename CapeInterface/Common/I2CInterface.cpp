@@ -1,11 +1,4 @@
-/*
- * i2c.cpp
- *
- *  Created on: Mar 17, 2014
- *      Author: Donald R. Poole, Jr.
- */
-
-#include "i2c.h"
+#include "I2CInterface.h"
 
 namespace Sensors
 {

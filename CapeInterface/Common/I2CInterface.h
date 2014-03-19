@@ -1,12 +1,5 @@
-/*
- * i2c.h
- *
- *  Created on: Mar 17, 2014
- *      Author: Donald R. Poole, Jr.
- */
-
-#ifndef I2C_H_
-#define I2C_H_
+#ifndef I2CINTERFACE_H
+#define I2CINTERFACE_H
 
 #include <iostream>
 #include <sstream>
@@ -64,4 +57,5 @@ namespace Sensors
     };
 
 } /* namespace Sensors */
-#endif /* I2C_H_ */
+
+#endif // I2CINTERFACE_H

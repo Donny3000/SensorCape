@@ -1,26 +1,22 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2014-03-19T09:26:56
+# Project created by QtCreator 2014-03-19T13:05:32
 #
 #-------------------------------------------------
 
 QT       -= core gui
 
-TARGET = mpu9150-i2c
+TARGET = Common
 TEMPLATE = lib
 CONFIG += staticlib
 
 include(../common.pri)
 
-DEFINES += MPU9150I2C_LIBRARY
-
 SOURCES += \
-    mpu9150.cpp
+    I2CInterface.cpp
 
 HEADERS += \
-    mpu9150.h
-
-LIBS += -lCommon
+    I2CInterface.h
 
 target.path = $$LIBDIR
 

@@ -105,7 +105,7 @@
 // I2C address 0x69 could be 0x68 depends on your wiring.
 const int MPU9150_I2C_ADDRESS = 0x68;
 
-#include "i2c.h"
+#include "I2CInterface.h"
 
 namespace Sensors
 {
