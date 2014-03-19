@@ -2,11 +2,11 @@ TEMPLATE = app
 CONFIG += console
 CONFIG -= qt
 
-TARGET = imt-test
+TARGET = cape-utility
 
 SOURCES += main.cpp
 
-include(../mpu9150.pri)
+include(../common.pri)
 
 INCLUDEPATH += $$INCDIR
 DEPENDPATH += $$LIBDIR

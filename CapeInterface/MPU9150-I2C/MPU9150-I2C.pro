@@ -20,7 +20,7 @@ HEADERS += \
     i2c.h \
     mpu9150.h
 
-include(../mpu9150.pri)
+include(../common.pri)
 
 target.path = $$LIBDIR
 
