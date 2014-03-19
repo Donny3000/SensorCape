@@ -1,0 +1,31 @@
+/*
+ * Copyright (C) 2013 Michael Leonard
+ *
+ * Sensor Cape for I2C on connector pins P9.19 P9.20
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+
+/dts-v1/;
+/plugin/;
+
+/ {
+    compatible = "ti,beaglebone", "ti,beaglebone-black";
+
+    /* identification */
+    part-number = "BB-SENSOR-CAPE-v0.9";
+
+    /* version */
+    version = "00A0";
+
+    /* State the resources this cape uses  */
+    fragment@0 {
+        target = <&i2c2>;
+        __overlay__ {
+            status = "okay";
+        };
+    };
+
+};
