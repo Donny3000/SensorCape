@@ -21,7 +21,44 @@
     version = "00A0";
 
     /* State the resources this cape uses  */
+    exclusive-use =
+        /* The MPU-9150 Interrupt Line */
+        "P8.10", "timer6",
+        /* The Light Sensor Interrupt Line */
+        "P8.11", "gpio1_13",
+        /* Temperature Sensor Interrrupt Line */
+        "P9.12", "gpio1_28",
+        /* Push button switch Interrupt Lines */
+        "P9.23", "gpio1_17",
+        "P9.24", "uart1_txd",
+        "P9.25", "gpio3_21",
+        "P9.26", "uart1_rxd";
+
     fragment@0 {
+        target = <&am33xx_pinmux>;
+        __overlay__ {
+            bb_int_pins: pinmux_bb_int_pins {
+                pinctrl-single,pins = <
+                    0x98 0x3F /* conf_gpmc_wen       | MODE7 */
+                    0x34 0x3F /* conf_gmpc_ad13      | MODE7 */
+                    0x78 0x3F /* conf_gpmc_ben1      | MODE7 */
+                    0x44 0x3F /* conf_gpmc_a1        | MODE7 */
+                    0x184 0x3F /* conf_uart1_txd     | MODE7 */
+                    0x1AC 0x3F /* conf_mcasp0_ahclkx | MODE7 */
+                    0x180 0x3F /* conf_uart1_rxd     | MODE7 */
+                >;
+            };
+        };
+    };
+
+    fragment@1 {
+        target = <&i2c1>;
+        __overlay__ {
+            status = "okay";
+        };
+    };
+
+    fragment@2 {
         target = <&i2c2>;
         __overlay__ {
             status = "okay";
