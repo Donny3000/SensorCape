@@ -17,9 +17,9 @@ namespace Sensors
     std::string IntToHex(int i);
 
     /*!
-     * Class: I2C - Class to read/write to an I2C bus device
-     *
-     * \param bus - The I2C bus number to instantiate a session on
+     * \brief The I2CInterface class - This class provides an I2C interface to
+     *        a device on an I2C bus. This class is implemented as a singleton
+     *        so that only one object has read/write access to the I2C bus.
      */
     class I2CInterface
     {
