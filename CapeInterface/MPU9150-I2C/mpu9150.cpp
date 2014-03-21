@@ -102,6 +102,64 @@ MPU9150::MPU9150(const __u8 bus, const __u16 address)
     I2CInterface::Instance()->write8(0x1A, 0x00);
 
     /*
+     * Gyroscope Configuration: Address 0x1B
+     *
+     * Description:
+     * ------------
+     * This register is used to trigger gyroscope self-test and configure the
+     * gyroscopes’ full scale range.
+     *
+     * The self-test for each gyroscope axis can be activated by controlling
+     * the XG_ST, YG_ST, and ZG_ST bits of this register. Self-test for each
+     * axis may be performed independently or all at the same time. Please
+     * refer to registers 13 – 16 for further information on gyroscope
+     * self-test.
+     *
+     * This register is used to configure the gyroscopes’ full scale range.
+     *
+     * FS_SEL selects the full scale range of the gyroscope outputs according to the following table.
+     *
+     *                    |----------------------------|
+     *                    | FS_SEL | Full Scale Range  |
+     *                    |--------|-------------------|
+     *                    |    0   | +/-250 degrees/s  |
+     *                    |    1   | +/-500 degrees/s  |
+     *                    |    2   | +/-1000 degrees/s |
+     *                    |    3   | +/-2000 degrees/s |
+     *                    |--------|-------------------|
+     *
+     * Bits 7 through 5 and 2 through 0 are reserved.
+     *
+     * Parameters:
+     * -----------
+     * FS_SEL 2-bit unsigned value. Selects the full scale range of gyroscopes.
+     *
+     * Usage: Set the range to +/- 1000 degrees/s
+     */
+    I2CInterface::Instance()->write8(0x1B, 0x10);
+
+    /*
+     * Accelerometer Configuration: Address 0x1C
+     *
+     * Description:
+     * ------------
+     * This register is used to trigger accelerometer self-test and configure
+     * the accelerometer full scale range.
+     *
+     * The self-test for each accelerometer axis can be activated by
+     * controlling the XA_ST, YA_ST, and ZA_ST bits of this register. Self-test
+     * for each axis may be performed independently or all at the same time.
+     * Please refer to registers 13 – 16 for further information on
+     * accelerometer self-test.
+     *
+     * AFS_SEL selects the full scale range of the accelerometer outputs
+     * according to the following table.
+     *
+     * Usage: We are setting the range to +/-8g
+     */
+    I2CInterface::Instance()->write8(0x1C, 0x10);
+
+    /*
      * FIFO Enable: Address: 0x23
      *
      * Description:
@@ -166,6 +224,81 @@ MPU9150::MPU9150(const __u8 bus, const __u16 address)
      * Usage: We are enable the Temp, Gyro & Accelerometer Sensor data
      */
     I2CInterface::Instance()->write8(0x23, 0xF8);
+
+    /*
+     * Interrupt Pin / Bypass Enable Configuration: Address 0x37
+     *
+     * Description:
+     * ------------
+     * This register configures the behavior of the interrupt signals at the
+     * INT pins. This register is also used to enable the FSYNC Pin to be used
+     * as an interrupt to the host application processor, as well as to enable
+     * Bypass Mode on the I2C Master. This bit also enables the clock output.
+     *
+     * FSYNC_INT_EN enables the FSYNC pin to be used as an interrupt to the
+     * host application processor. A transition to the active level specified
+     * in FSYNC_INT_LEVEL will trigger an interrupt. The status of this
+     * interrupt is read from the PASS_THROUGH bit in the I2C Master Status
+     * Register (Register 54).
+     *
+     * When I2C_BYPASS_EN is equal to 1 and I2C_MST_EN (Register 106 bit[5])
+     * is equal to 0, the host application processor will be able to directly
+     * access the auxiliary I2C bus of the MPU-9150. When this bit is equal to
+     * 0, the host application processor will not be able to directly access
+     * the auxiliary I2C bus of the MPU-9150 regardless of the state of
+     * I2C_MST_EN.
+     *
+     * For further information regarding Bypass Mode, please refer to Section
+     * 7.12 and 7.14 of the MPU- 9150 Product Specification document.
+     *
+     * Parameters:
+     * -----------
+     * NT_LEVEL         When this bit is equal to 0, the logic level for the
+     *                  INT pin is active high.
+     *                  When this bit is equal to 1, the logic level for the
+     *                  INT pin is active low.
+     *
+     * INT_OPEN         When this bit is equal to 0, the INT pin is configured
+     *                  as push-pull.
+     *                  When this bit is equal to 1, the INT pin is configured
+     *                  as open drain.
+     *
+     * LATCH_INT_EN     When this bit is equal to 0, the INT pin emits a 50us
+     *                  long pulse.
+     *                  When this bit is equal to 1, the INT pin is held high
+     *                  until the interrupt is cleared.
+     *
+     * INT_RD_CLEAR     When this bit is equal to 0, interrupt status bits are
+     *                  cleared only by reading INT_STATUS (Register 58)
+     *                  When this bit is equal to 1, interrupt status bits are
+     *                  cleared on any read operation.
+     *
+     * FSYNC_INT_LEVEL  When this bit is equal to 0, the logic level for the
+     *                  FSYNC pin (when used as an interrupt to the host
+     *                  processor) is active high.
+     *                  When this bit is equal to 1, the logic level for the
+     *                  FSYNC pin (when used as an interrupt to the host
+     *                  processor) is active low.
+     *
+     * FSYNC_INT_EN     When equal to 0, this bit disables the FSYNC pin from
+     *                  causing an interrupt to the host processor.
+     *                  When equal to 1, this bit enables the FSYNC pin to be
+     *                  used as an interrupt to the host processor.
+     *
+     * I2C_BYPASS_EN    When this bit is equal to 1 and I2C_MST_EN (Register
+     *                  106 bit[5]) is equal to 0, the host application
+     *                  processor will be able to directly access the auxiliary
+     *                  I2C bus of the MPU-9150.
+     *                  When this bit is equal to 0, the host application
+     *                  processor will not be able to directly access the
+     *                  auxiliary I2C bus of the MPU-9150 regardless of the
+     *                  state of I2C_MST_EN (Register 106 bit[5]).
+     *
+     * Usage: We will enable I2C bypass, disable FSYNC interrupt, enable
+     * interrupt any read clear, latch the interrupt line until cleared,
+     * push-pull output and active high.
+     */
+    I2CInterface::Instance()->write8(0x37, 0x32);
 
     /*
      * Interrupt Enable: Address 0x38
@@ -286,7 +419,8 @@ void MPU9150::Sleep(bool enable)
     if( enable )
         I2CInterface::Instance()->write8(MPU9150_PWR_MGMT_1, 0x40);
     else
-        I2CInterface::Instance()->write8(MPU9150_PWR_MGMT_1, 0x00);
+        // Wake up the device and set the clock source to the X-axis gyroscope
+        I2CInterface::Instance()->write8(MPU9150_PWR_MGMT_1, 0x01);
 }
 
 __u8 MPU9150::WhoAmI()
