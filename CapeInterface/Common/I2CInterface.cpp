@@ -80,9 +80,9 @@ namespace Sensors
         return mAddressSet;
     }
 
-    __s8 I2CInterface::read8(const __u8 reg)
+    __s32 I2CInterface::read8(const __u8 reg)
     {
-        __s8 res = -1;
+        __s32 res = -1;
 
         if( mAddressSet )
         {
@@ -108,9 +108,9 @@ namespace Sensors
         return res;
     }
 
-    __s16 I2CInterface::read16(const __u8 reg)
+    __s32 I2CInterface::read16(const __u8 reg)
     {
-        __s16 res = -1;
+        __s32 res = -1;
 
         if( mAddressSet )
         {

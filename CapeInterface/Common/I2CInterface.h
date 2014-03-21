@@ -33,9 +33,9 @@ namespace Sensors
 
             //! Basic methods to read/write data to/from a device on the bus
             //! \{
-            __s8 read8(const __u8 reg);
+            __s32 read8(const __u8 reg);
             __s32 write8(const __u8 reg, __u8 data);
-            __s16 read16(const __u8 reg);
+            __s32 read16(const __u8 reg);
             __s32 write16(const __u8 reg, __u16 data);
             //! \}
 

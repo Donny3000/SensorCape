@@ -6,6 +6,10 @@ using namespace std;
 
 Sensors::MPU9150 imu( 1 );
 
+#define A_GAIN        6.103515625e-05
+#define IMUPI_G_GAIN  0.030487804878049
+#define IMUPI_M_GAIN  0.3001221001221001
+
 int main()
 {
     int ret;
@@ -27,10 +31,14 @@ int main()
         {
             if( imu.DataReady() )
             {
-                short accel_x = imu.GetAccelerometerX();
-                cout << "Accel X: " << hex << accel_x << endl;
+                float accel_x = imu.GetAccelerometerX() * A_GAIN;
+                float accel_y = imu.GetAccelerometerY() * A_GAIN;
+                float accel_z = imu.GetAccelerometerZ() * A_GAIN;
+                cout << "Accel X: " << accel_x
+                     << " | Accel Y: " << accel_y
+                     << " | Accel Z: " << accel_z << endl;
             }
-            usleep( 10000 );
+            usleep( 1000 );
         }
 
         ret = EXIT_SUCCESS;
