@@ -33,7 +33,7 @@ MPU9150::MPU9150(const __u8 bus, const __u16 address)
      * Since the accelerometer sample rate is 1kHz, we will set the sample rate
      * of the other data to 1kHz too.
      */
-    I2CInterface::Instance()->write8(0x19, 0x08);
+    I2CInterface::Instance()->write8(0x19, 0x07);
 
     /*
      * Configuration: Address: 0x1A
