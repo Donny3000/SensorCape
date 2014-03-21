@@ -11,7 +11,7 @@ int main()
     int ret;
 
     // Wake up the IMU
-    imu.WakeUp();
+    imu.Sleep( false );
 
     short whoami = imu.WhoAmI();
     cout << "Who Am I: 0x" << hex << whoami << endl;
@@ -25,8 +25,11 @@ int main()
 
         while( !sigHandler.GotExitSignal() )
         {
-            short accel_x = imu.GetAccelerometerX();
-            cout << "Accel X: " << hex << accel_x << endl;
+            if( imu.DataReady() )
+            {
+                short accel_x = imu.GetAccelerometerX();
+                cout << "Accel X: " << hex << accel_x << endl;
+            }
             usleep( 10000 );
         }
 

@@ -254,10 +254,39 @@ MPU9150::~MPU9150()
 {
 }
 
-void MPU9150::WakeUp()
+bool MPU9150::FIFOOverflow()
 {
-    // Clear the 'sleep' bit
-    I2CInterface::Instance()->write8(MPU9150_PWR_MGMT_1, 0);
+    __s8 data = I2CInterface::Instance()->read8(MPU9150_INT_STATUS);
+    if(data < 0)
+        return false;
+    else
+        return (data & 0x10);
+}
+
+bool MPU9150::I2CMasterInterrupt()
+{
+    __s8 data = I2CInterface::Instance()->read8(MPU9150_INT_STATUS);
+    if(data < 0)
+        return false;
+    else
+        return (data & 0x08);
+}
+
+bool MPU9150::DataReady()
+{
+    __s8 data = I2CInterface::Instance()->read8(MPU9150_INT_STATUS);
+    if(data < 0)
+        return false;
+    else
+        return (data & 0x01);
+}
+
+void MPU9150::Sleep(bool enable)
+{
+    if( enable )
+        I2CInterface::Instance()->write8(MPU9150_PWR_MGMT_1, 0x40);
+    else
+        I2CInterface::Instance()->write8(MPU9150_PWR_MGMT_1, 0x00);
 }
 
 __u8 MPU9150::WhoAmI()

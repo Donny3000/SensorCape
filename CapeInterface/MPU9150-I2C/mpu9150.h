@@ -133,8 +133,15 @@ namespace Sensors
             virtual ~MPU9150();
             //! \}
 
+            //! Interrupt Status Methods
+            //! \{
+            bool FIFOOverflow();
+            bool I2CMasterInterrupt();
+            bool DataReady();
+            //! \}
+
             //! Method for waking up the sensor
-            void WakeUp();
+            void Sleep(bool enable = true);
 
             //! Method to retrieve the WhoAmI data
             __u8 WhoAmI();
