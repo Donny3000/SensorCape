@@ -86,11 +86,10 @@ namespace Sensors
 
         if( mAddressSet )
         {
-            res = i2c_smbus_read_byte_data(mFile, reg) & 0xFF;
-            if(res < 0)
-            {
+            if((res = i2c_smbus_read_byte_data(mFile, reg)) < 0)
                 std::cerr << "Failed to read from i2c address " << IntToHex(reg) << std::endl;
-            }
+            else
+                res &= 0xFF;
         }
 
         return res;
@@ -102,11 +101,8 @@ namespace Sensors
 
         if( mAddressSet )
         {
-            res = i2c_smbus_write_byte_data(mFile, reg, data);
-            if(res < 0)
-            {
+            if((res = i2c_smbus_write_byte_data(mFile, reg, data)) < 0)
                 std::cerr << "Failed to write to i2c address " << IntToHex(reg) << std::endl;
-            }
         }
 
         return res;
@@ -118,11 +114,10 @@ namespace Sensors
 
         if( mAddressSet )
         {
-            res = i2c_smbus_read_word_data(mFile, reg) & 0xFFFF;
-            if(res < 0)
-            {
+            if((res = i2c_smbus_read_word_data(mFile, reg)) < 0)
                 std::cerr << "Failed to read from i2c address " << IntToHex(reg) << std::endl;
-            }
+            else
+                res &= 0xFFFF;
         }
 
         return res;
@@ -134,11 +129,8 @@ namespace Sensors
 
         if( mAddressSet )
         {
-            res = i2c_smbus_write_word_data(mFile, reg, data);
-            if(res < 0)
-            {
+            if((res = i2c_smbus_write_word_data(mFile, reg, data)) < 0)
                 std::cerr << "Failed to write to i2c address " << IntToHex(reg) << std::endl;
-            }
         }
 
         return res;
