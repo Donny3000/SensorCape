@@ -1,16 +1,43 @@
 #include <iostream>
 #include "mpu9150.h"
+#include "SignalHandler.h"
 
 using namespace std;
 
+Sensors::MPU9150 imu( 1 );
+
 int main()
 {
-    Sensors::MPU9150 imu(1);
+    int ret;
 
     // Wake up the IMU
-    uint8_t whoami = imu.WhoAmI();
+    imu.WakeUp();
+
+    short whoami = imu.WhoAmI();
     cout << "Who Am I: 0x" << hex << whoami << endl;
 
-    return 0;
+    try
+    {
+        SignalHandler sigHandler;
+
+        // Register signal handler to handle kill signal
+        sigHandler.SetupSignalHandlers();
+
+        while( !sigHandler.GotExitSignal() )
+        {
+            short accel_x = imu.GetAccelerometerX();
+            cout << "Accel X: " << hex << accel_x << endl;
+            usleep( 10000 );
+        }
+
+        ret = EXIT_SUCCESS;
+    }
+    catch(SignalException& e)
+    {
+        cerr << "SignalException: " << e.what() << endl;
+        ret = EXIT_FAILURE;
+    }
+
+    return ret;
 }
 

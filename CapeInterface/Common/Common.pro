@@ -13,10 +13,12 @@ CONFIG += staticlib
 include(../common.pri)
 
 SOURCES += \
-    I2CInterface.cpp
+    I2CInterface.cpp \
+    SignalHandler.cpp
 
 HEADERS += \
-    I2CInterface.h
+    I2CInterface.h \
+    SignalHandler.h
 
 target.path = $$LIBDIR
 
