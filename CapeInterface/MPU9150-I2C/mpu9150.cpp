@@ -2,11 +2,11 @@
 
 using namespace Sensors;
 
-MPU9150::MPU9150(const __u8 bus, const __u16 address)
+MPU9150::MPU9150(const __u8 bus, const __u16 address) :
+    mDeviceAddr( address )
 {
     // Open the bus and set the address to the MPU-9150
     I2CInterface::Instance()->OpenI2CInterface( bus );
-    I2CInterface::Instance()->SetDeviceAddress( address );
 
     // Begin configuring the MPU-9150 for use
 
@@ -33,7 +33,7 @@ MPU9150::MPU9150(const __u8 bus, const __u16 address)
      * Since the accelerometer sample rate is 1kHz, we will set the sample rate
      * of the other data to 1kHz too.
      */
-    I2CInterface::Instance()->write8(0x19, 0x07);
+    I2CInterface::Instance()->write8(address, 0x19, 0x07);
 
     /*
      * Configuration: Address: 0x1A
@@ -99,7 +99,7 @@ MPU9150::MPU9150(const __u8 bus, const __u16 address)
      * Usage: Disable FSYNC input and the Digital Low-pass Filter to get the
      * highest bandwidth and lowest time delay.
      */
-    I2CInterface::Instance()->write8(0x1A, 0x00);
+    I2CInterface::Instance()->write8(address, 0x1A, 0x00);
 
     /*
      * Gyroscope Configuration: Address 0x1B
@@ -136,7 +136,7 @@ MPU9150::MPU9150(const __u8 bus, const __u16 address)
      *
      * Usage: Set the range to +/- 1000 degrees/s
      */
-    I2CInterface::Instance()->write8(0x1B, 0x10);
+    I2CInterface::Instance()->write8(address, 0x1B, 0x10);
 
     /*
      * Accelerometer Configuration: Address 0x1C
@@ -157,7 +157,7 @@ MPU9150::MPU9150(const __u8 bus, const __u16 address)
      *
      * Usage: We are setting the range to +/-8g
      */
-    I2CInterface::Instance()->write8(0x1C, 0x10);
+    I2CInterface::Instance()->write8(address, 0x1C, 0x10);
 
     /*
      * FIFO Enable: Address: 0x23
@@ -223,7 +223,7 @@ MPU9150::MPU9150(const __u8 bus, const __u16 address)
      *
      * Usage: We are enable the Temp, Gyro & Accelerometer Sensor data
      */
-    I2CInterface::Instance()->write8(0x23, 0xF8);
+    I2CInterface::Instance()->write8(address, 0x23, 0xF8);
 
     /*
      * Interrupt Pin / Bypass Enable Configuration: Address 0x37
@@ -298,7 +298,7 @@ MPU9150::MPU9150(const __u8 bus, const __u16 address)
      * interrupt any read clear, latch the interrupt line until cleared,
      * push-pull output and active high.
      */
-    I2CInterface::Instance()->write8(0x37, 0x32);
+    I2CInterface::Instance()->write8(address, 0x37, 0x32);
 
     /*
      * Interrupt Enable: Address 0x38
@@ -325,7 +325,7 @@ MPU9150::MPU9150(const __u8 bus, const __u16 address)
      *
      * Usage: We want to enable the FIFO OFLOW_EN and DATA_RDY_EN interrupts.
      */
-    I2CInterface::Instance()->write8(0x38, 0x19);
+    I2CInterface::Instance()->write8(address, 0x38, 0x19);
 
     /*
      * User Control: Address 0x6A
@@ -380,7 +380,7 @@ MPU9150::MPU9150(const __u8 bus, const __u16 address)
      *
      * Usage: Enable the FIFO, Disable I2C Master Mode.
      */
-    I2CInterface::Instance()->write8(0x6A, 0x40);
+    I2CInterface::Instance()->write8(address, 0x6A, 0x40);
 }
 
 MPU9150::~MPU9150()
@@ -389,7 +389,7 @@ MPU9150::~MPU9150()
 
 bool MPU9150::FIFOOverflow()
 {
-    __s8 data = I2CInterface::Instance()->read8(MPU9150_INT_STATUS);
+    __s8 data = I2CInterface::Instance()->read8(mDeviceAddr, MPU9150_INT_STATUS);
     if(data < 0)
         return false;
     else
@@ -398,7 +398,7 @@ bool MPU9150::FIFOOverflow()
 
 bool MPU9150::I2CMasterInterrupt()
 {
-    __s8 data = I2CInterface::Instance()->read8(MPU9150_INT_STATUS);
+    __s8 data = I2CInterface::Instance()->read8(mDeviceAddr, MPU9150_INT_STATUS);
     if(data < 0)
         return false;
     else
@@ -407,7 +407,7 @@ bool MPU9150::I2CMasterInterrupt()
 
 bool MPU9150::DataReady()
 {
-    __s8 data = I2CInterface::Instance()->read8(MPU9150_INT_STATUS);
+    __s8 data = I2CInterface::Instance()->read8(mDeviceAddr, MPU9150_INT_STATUS);
     if(data < 0)
         return false;
     else
@@ -417,73 +417,73 @@ bool MPU9150::DataReady()
 void MPU9150::Sleep(bool enable)
 {
     if( enable )
-        I2CInterface::Instance()->write8(MPU9150_PWR_MGMT_1, 0x40);
+        I2CInterface::Instance()->write8(mDeviceAddr, MPU9150_PWR_MGMT_1, 0x40);
     else
         // Wake up the device and set the clock source to the X-axis gyroscope
-        I2CInterface::Instance()->write8(MPU9150_PWR_MGMT_1, 0x01);
+        I2CInterface::Instance()->write8(mDeviceAddr, MPU9150_PWR_MGMT_1, 0x01);
 }
 
 __u8 MPU9150::WhoAmI()
 {
-    return I2CInterface::Instance()->read8(MPU9150_WHO_AM_I);
+    return I2CInterface::Instance()->read8(mDeviceAddr, MPU9150_WHO_AM_I);
 }
 
 __u16 MPU9150::GetAccelerometerX()
 {
-    return (I2CInterface::Instance()->read8(MPU9150_ACCEL_XOUT_H) << 8) |
-            I2CInterface::Instance()->read8(MPU9150_ACCEL_XOUT_L);
+    return (I2CInterface::Instance()->read8(mDeviceAddr, MPU9150_ACCEL_XOUT_H) << 8) |
+            I2CInterface::Instance()->read8(mDeviceAddr, MPU9150_ACCEL_XOUT_L);
 }
 
 __u16 MPU9150::GetAccelerometerY()
 {
-    return (I2CInterface::Instance()->read8(MPU9150_ACCEL_YOUT_H) << 8) |
-            I2CInterface::Instance()->read8(MPU9150_ACCEL_YOUT_L);
+    return (I2CInterface::Instance()->read8(mDeviceAddr, MPU9150_ACCEL_YOUT_H) << 8) |
+            I2CInterface::Instance()->read8(mDeviceAddr, MPU9150_ACCEL_YOUT_L);
 }
 
 __u16 MPU9150::GetAccelerometerZ()
 {
-    return (I2CInterface::Instance()->read8(MPU9150_ACCEL_ZOUT_H) << 8) |
-            I2CInterface::Instance()->read8(MPU9150_ACCEL_ZOUT_L);
+    return (I2CInterface::Instance()->read8(mDeviceAddr, MPU9150_ACCEL_ZOUT_H) << 8) |
+            I2CInterface::Instance()->read8(mDeviceAddr, MPU9150_ACCEL_ZOUT_L);
 }
 
 __u16 MPU9150::GetGyroscopeX()
 {
-    return (I2CInterface::Instance()->read8(MPU9150_GYRO_XOUT_H) << 8) |
-            I2CInterface::Instance()->read8(MPU9150_GYRO_XOUT_L);
+    return (I2CInterface::Instance()->read8(mDeviceAddr, MPU9150_GYRO_XOUT_H) << 8) |
+            I2CInterface::Instance()->read8(mDeviceAddr, MPU9150_GYRO_XOUT_L);
 }
 
 __u16 MPU9150::GetGyroscopeY()
 {
-    return (I2CInterface::Instance()->read8(MPU9150_GYRO_YOUT_H) << 8) |
-            I2CInterface::Instance()->read8(MPU9150_GYRO_YOUT_L);
+    return (I2CInterface::Instance()->read8(mDeviceAddr, MPU9150_GYRO_YOUT_H) << 8) |
+            I2CInterface::Instance()->read8(mDeviceAddr, MPU9150_GYRO_YOUT_L);
 }
 
 __u16 MPU9150::GetGyroscopeZ()
 {
-    return (I2CInterface::Instance()->read8(MPU9150_GYRO_ZOUT_H) << 8) |
-            I2CInterface::Instance()->read8(MPU9150_GYRO_ZOUT_L);
+    return (I2CInterface::Instance()->read8(mDeviceAddr, MPU9150_GYRO_ZOUT_H) << 8) |
+            I2CInterface::Instance()->read8(mDeviceAddr, MPU9150_GYRO_ZOUT_L);
 }
 
 __u16 MPU9150::GetCompassX()
 {
-    return (I2CInterface::Instance()->read8(MPU9150_CMPS_XOUT_H) << 8) |
-            I2CInterface::Instance()->read8(MPU9150_CMPS_XOUT_L);
+    return (I2CInterface::Instance()->read8(mDeviceAddr, MPU9150_CMPS_XOUT_H) << 8) |
+            I2CInterface::Instance()->read8(mDeviceAddr, MPU9150_CMPS_XOUT_L);
 }
 
 __u16 MPU9150::GetCompassY()
 {
-    return (I2CInterface::Instance()->read8(MPU9150_CMPS_YOUT_H) << 8) |
-            I2CInterface::Instance()->read8(MPU9150_CMPS_YOUT_L);
+    return (I2CInterface::Instance()->read8(mDeviceAddr, MPU9150_CMPS_YOUT_H) << 8) |
+            I2CInterface::Instance()->read8(mDeviceAddr, MPU9150_CMPS_YOUT_L);
 }
 
 __u16 MPU9150::GetCompassZ()
 {
-    return (I2CInterface::Instance()->read8(MPU9150_CMPS_ZOUT_H) << 8) |
-            I2CInterface::Instance()->read8(MPU9150_CMPS_ZOUT_L);
+    return (I2CInterface::Instance()->read8(mDeviceAddr, MPU9150_CMPS_ZOUT_H) << 8) |
+            I2CInterface::Instance()->read8(mDeviceAddr, MPU9150_CMPS_ZOUT_L);
 }
 
 __u16 MPU9150::GetTemp()
 {
-    return (I2CInterface::Instance()->read8(MPU9150_TEMP_OUT_H) << 8) |
-            I2CInterface::Instance()->read8(MPU9150_TEMP_OUT_L);
+    return (I2CInterface::Instance()->read8(mDeviceAddr, MPU9150_TEMP_OUT_H) << 8) |
+            I2CInterface::Instance()->read8(mDeviceAddr, MPU9150_TEMP_OUT_L);
 }

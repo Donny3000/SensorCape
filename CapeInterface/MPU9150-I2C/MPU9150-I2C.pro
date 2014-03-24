@@ -20,8 +20,6 @@ SOURCES += \
 HEADERS += \
     mpu9150.h
 
-LIBS += -lCommon
-
 target.path = $$LIBDIR
 
 headers.path = $$INCDIR

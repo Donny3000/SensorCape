@@ -171,6 +171,7 @@ namespace Sensors
             __u16 GetTemp();
 
         private:
+            __u16 mDeviceAddr;
             __s16 compass[3];
             __s16 accel[3];
             __s16 gyro[3];
