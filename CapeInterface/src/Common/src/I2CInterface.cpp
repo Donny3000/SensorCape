@@ -21,7 +21,7 @@ namespace Sensors
      */
     I2CInterface *I2CInterface::Instance()
     {
-        static I2CInterface instance();
+        static I2CInterface instance;
         return &instance;
     }
 
