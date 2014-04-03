@@ -49,8 +49,6 @@ namespace Sensors
             __s32 write16(const __u16 deviceAddr, const __u8 reg, __u16 data);
             //! \}
 
-            static I2CInterface *mI2CInterfaceInstance;
-
         private:
             //! Since this is a singleton, we hide the constuctors and assignment operators
             //! \{

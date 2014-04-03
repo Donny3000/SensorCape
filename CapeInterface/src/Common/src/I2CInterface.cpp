@@ -12,9 +12,6 @@ namespace Sensors
     //! Global object for invalid address exceptions
     static BadAddress InvalidDeviceAddress;
 
-    //! Global static pointer used to ensure a single instance of the class
-    I2CInterface *I2CInterface::mI2CInterfaceInstance = nullptr;
-
     /*!
      * \brief I2CInterface::Instance - This function is called to create an
      *        instance of the I2CInterface Class. Calling the constuctor
@@ -24,10 +21,8 @@ namespace Sensors
      */
     I2CInterface *I2CInterface::Instance()
     {
-        if( !mI2CInterfaceInstance )
-            mI2CInterfaceInstance = new I2CInterface();
-
-        return mI2CInterfaceInstance;
+        static I2CInterface instance();
+        return &instance;
     }
 
     I2CInterface::I2CInterface() :
