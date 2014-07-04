@@ -80,12 +80,12 @@ MPU9150::MPU9150(const __u8 bus, const __u16 address) :
      * |          | (Hz)         | (ms)     | (Hz)         | (ms)     |             |
      * |----------------------------------------------------------------------------|
      * |    0     |     260      |     0    |      256     |   0.98   |      8      |
-     * |    1     |     184      |     0    |      188     |   0.98   |      1      |
-     * |    2     |     94       |     0    |      98      |   0.98   |      1      |
-     * |    3     |     44       |     0    |      42      |   0.98   |      1      |
-     * |    4     |     21       |     0    |      20      |   0.98   |      1      |
-     * |    5     |     10       |     0    |      10      |   0.98   |      1      |
-     * |    6     |     5        |     0    |      5       |   0.98   |      1      |
+     * |    1     |     184      |    2.0   |      188     |   0.98   |      1      |
+     * |    2     |     94       |    3.0   |      98      |   0.98   |      1      |
+     * |    3     |     44       |    4.9   |      42      |   0.98   |      1      |
+     * |    4     |     21       |    8.5   |      20      |   0.98   |      1      |
+     * |    5     |     10       |   13.8   |      10      |   0.98   |      1      |
+     * |    6     |     5        |    19    |      5       |   0.98   |      1      |
      * |    7     |        RESERVED         |         RESERVED        |      8      |
      * |----------------------------------------------------------------------------|
      *
@@ -107,7 +107,7 @@ MPU9150::MPU9150(const __u8 bus, const __u16 address) :
      * Description:
      * ------------
      * This register is used to trigger gyroscope self-test and configure the
-     * gyroscopes’ full scale range.
+     * gyroscopes' full scale range.
      *
      * The self-test for each gyroscope axis can be activated by controlling
      * the XG_ST, YG_ST, and ZG_ST bits of this register. Self-test for each

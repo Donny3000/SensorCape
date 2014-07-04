@@ -33,9 +33,9 @@ int main()
         {
             if( imu.DataReady() )
             {
-                float accel_x = G * imu.GetAccelerometerX() * A_GAIN;
-                float accel_y = G * imu.GetAccelerometerY() * A_GAIN;
-                float accel_z = G * imu.GetAccelerometerZ() * A_GAIN;
+                float accel_x = imu.GetAccelerometerX() * A_GAIN;
+                float accel_y = imu.GetAccelerometerY() * A_GAIN;
+                float accel_z = imu.GetAccelerometerZ() * A_GAIN;
                 cout << "Accel X: " << accel_x
                      << " | Accel Y: " << accel_y
                      << " | Accel Z: " << accel_z << endl;
